@@ -2,22 +2,18 @@
 /*
 ---
 
-script: Class.Binds.Remover.js
+script: Class.Binds.js
 
-name: Class.Binds
-
-description: Automagically binds specified methods in a class to the instance of the class.
+description: Removes mutators added by Class.Binds that breaks multiple inheritance
 
 license: MIT-style license
 
 authors:
   - Aaron Newton
 
-requires:
-  - More/Class.Binds
-
 provides: [Class.Binds.Remover]
 
+requires: [More/Class.Binds]
 ...
 */
 
