@@ -25,17 +25,15 @@ provides: [Element.Events.outerClick]
 			if (!this.retrieve('keypress:listeners')) {
 				var events = {
 					keypress: function(e) {
-					  console.log('real keypress');
 						var event = new Event(e)//$extend({}, e);
 						event.repeat = (event.code == this.retrieve('keypress:code'));
 						event.code = this.retrieve('keypress:code');
 						event.key = this.retrieve('keypress:key');
 						event.type = 'keypress';
 						event.from = 'keypress';
-            this.fireEvent('keypress', event)
+            if (event.repeat) this.fireEvent('keypress', event)
 					}.bind(this),
 					keyup: function() {
-					  console.log('real keyup');
 						this.eliminate('keypress:code');
 						this.eliminate('keypress:key');
 					}
@@ -52,17 +50,14 @@ provides: [Element.Events.outerClick]
 		},
 		
 		condition: function(event) {
-		  event.repeat = (event.key == this.retrieve('keypress:key'));
+		  var key = Event.Keys.keyOf(event.code) || event.key;
+		  event.repeat = (key == this.retrieve('keypress:key'));
 			this.store('keypress:code', event.code);
-		  this.store('keypress:key', event.key);
-			if (event.firesKeyPressEvent(this.retrieve('keypress:code'))) {
-				event.pressed = true;
-				event.stopPropagation();
-				console.log(event.type, 'keydown!')
-				return true;
-			} else {  
+		  this.store('keypress:key', key);
+			if (!event.firesKeyPressEvent(this.retrieve('keypress:code'))) {
 				event.type = 'keypress';
 				event.from = 'keypress';
+				event.key = key;
 			  return true;
 			}
 		}
