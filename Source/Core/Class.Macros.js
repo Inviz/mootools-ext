@@ -33,7 +33,6 @@ $extend(Class.Mutators, {
 
 Class.hasParent = function(klass) {
   var caller = klass.$caller;
-  return false
   return !!(caller.$owner.parent && caller.$owner.parent.prototype[caller.$name]);
 };
 
