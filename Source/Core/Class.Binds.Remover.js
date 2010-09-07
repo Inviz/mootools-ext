@@ -11,9 +11,7 @@ license: MIT-style license
 authors:
   - Aaron Newton
 
-provides: [Class.Binds.Remover]
-
-requires: [More/Class.Binds]
+extends: More/Class.Binds
 ...
 */
 
