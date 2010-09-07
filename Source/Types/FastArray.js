@@ -21,7 +21,7 @@ FastArray = function() {
 
 FastArray.from = function(ary) {
   var array = new FastArray;
-  array.push.apply(array, ary)
+  FastArray.prototype.push.apply(array, ary)
   return array;
 }
 FastArray.prototype = {
