@@ -12,7 +12,7 @@ requires:
 - Core/Event
 - Event.KeyNames
  
-provides: [Element.Events.outerClick]
+provides: [Element.Events.keypress]
  
 ...
 */
