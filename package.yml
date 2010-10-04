@@ -27,3 +27,4 @@ sources:
   - "Source/Core/Class.Macros.js"
   - "Source/Core/Class.Binds.Remover.js"
   - "Source/Drag/Drag.Limits.js"
+  - "Source/Drag/Slider.js"
