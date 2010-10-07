@@ -21,16 +21,14 @@ provides: [Class.Mutators.States, Class.Stateful]
 
 
 Class.Stateful = function(states) {
-  var proto = {};
-  
-  $extend(proto, {
+  var proto = {
     options: {
       states: {}
     },
     setStateTo: function(state, to) {
       return this[this.options.states[state][to ? 'enabler' : 'disabler']]()
     }
-  });
+  };
 
   Hash.each(states, function(methods, state) {
     var options = Array.link(methods, {enabler: String.type, disabler: String.type, toggler: String.type, reflect: $defined})
@@ -44,6 +42,7 @@ Class.Stateful = function(states) {
       this[state] = true; 
 
     	if (Class.hasParent(this)) this.parent.apply(this, arguments);
+    	
       this.fireEvent(options.enabler, arguments);
       if (this.onStateChange && options.reflect) this.onStateChange(state, true, arguments);
       return true;

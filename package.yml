@@ -6,7 +6,7 @@ web: "[mootools.net](http://mootools.net)"
 
 description: "MooTools, The JavaScript framework"
 
-license: "[MIT License](http://mootools.net/license.txt)"
+license: Public domain, http://unlicense.org
 
 copyright: "&copy; [MooTools](http://mootools.net)"
 
@@ -15,7 +15,6 @@ authors: "Random folks"
 sources:
   - "Source/Types/Event.js"
   - "Source/Types/FastArray.js"
-  - "Source/Element/Events/OuterClick.js"
   - "Source/Element/Events/Keypress.js"
   - "Source/Element/Properties/Data.js"
   - "Source/Element/Properties/Widget.js"

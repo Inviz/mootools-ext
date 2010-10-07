@@ -28,6 +28,9 @@ $extend(Class.Mutators, {
   },
   layered: function(mixin) {
     this.prototype.layered = $mixin(this.prototype.layered || {}, mixin)
+  },
+  actions: function(mixin) {
+    this.prototype.actions = $mixin(this.prototype.actions || {}, mixin)
   }
 });
 
