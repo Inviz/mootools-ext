@@ -66,3 +66,15 @@ Macro.defaults = function(callback) {
     }
   }
 };
+
+Macro.proc = function(name, args) {
+  return function(item) {
+    item[name].apply(item, args || arguments);
+  }
+}
+
+Macro.delegate = function(name, method) {
+  return function() {
+    if (this[name]) return this[name][method].apply(this[name], arguments);
+  }
+}

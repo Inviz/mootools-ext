@@ -54,7 +54,7 @@ provides: [Element.Events.keypress]
 		  event.repeat = (key == this.retrieve('keypress:key'));
 			this.store('keypress:code', event.code);
 		  this.store('keypress:key', key);
-			if (!event.firesKeyPressEvent(this.retrieve('keypress:code'))) {
+			if (!event.firesKeyPressEvent(event.code))   {
 				event.type = 'keypress';
 				event.from = 'keypress';
 				event.key = key;
