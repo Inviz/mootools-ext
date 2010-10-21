@@ -19,6 +19,7 @@ sources:
   - "Source/Element/Properties/Data.js"
   - "Source/Element/Properties/Widget.js"
   - "Source/Element/Element.Selection.js"
+  - "Source/Element/Element.Microdata.js"
   - "Source/Utilities/Observer.js"
   - "Source/Utilities/Logger.js"
   - "Source/Core/Class.Includes.js"

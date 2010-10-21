@@ -45,8 +45,7 @@ Macro = {};
 Macro.onion = function(callback) {
   return function() {
     if (!this.parent.apply(this, arguments)) return;
-    callback.apply(this, arguments);
-    return true;
+    return callback.apply(this, arguments) !== false;
   } 
 }
 
@@ -67,10 +66,16 @@ Macro.defaults = function(callback) {
   }
 };
 
+Macro.map = function(name) {
+  return function(item) {
+    return item[name]
+  }
+}
+
 Macro.proc = function(name, args) {
   return function(item) {
-    item[name].apply(item, args || arguments);
-  }
+    return item[name].apply(item, args || arguments);
+  } 
 }
 
 Macro.delegate = function(name, method) {
