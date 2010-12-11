@@ -17,29 +17,10 @@ provides: [Class.Mutators.States, Macro, Class.hasParent]
 ...
 */
 
-
-
-$extend(Class.Mutators, {
-  events: function(mixin) {
-    this.prototype.events = $mixin(this.prototype.events || {}, mixin);
-  },
-  shortcuts: function(mixin) {
-    this.prototype.shortcuts = $mixin(this.prototype.shortcuts || {}, mixin);
-  },
-  layered: function(mixin) {
-    this.prototype.layered = $mixin(this.prototype.layered || {}, mixin)
-  },
-  actions: function(mixin) {
-    this.prototype.actions = $mixin(this.prototype.actions || {}, mixin)
-  }
-});
-
 Class.hasParent = function(klass) {
   var caller = klass.$caller;
   return !!(caller.$owner.parent && caller.$owner.parent.prototype[caller.$name]);
 };
-
-
 
 Macro = {};
 Macro.onion = function(callback) {
@@ -49,7 +30,7 @@ Macro.onion = function(callback) {
   } 
 }
 
-Macro.setter = function(name, callback) {
+Macro.getter = function(name, callback) {
   return function() {
     if (!this[name]) this[name] = callback.apply(this, arguments);
     return this[name];

@@ -14,7 +14,9 @@ requires:
 - Core/Hash
 - Class.Mutators.Includes
 
-provides: [Class.Mutators.States, Class.Stateful]
+provides: 
+  - Class.Mutators.States
+  - Class.Stateful
  
 ...
 */

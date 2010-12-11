@@ -52,5 +52,11 @@ FastArray.prototype = {
 
   erase: function(value) {
     delete this[value];
+  },
+  
+  join: function(delimeter) {
+    var bits = [];
+    for (var key in this) if (this.hasOwnProperty(key)) bits.push(key);
+    return bits.join(delimeter)
   }
 };

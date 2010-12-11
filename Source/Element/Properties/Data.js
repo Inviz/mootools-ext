@@ -5,7 +5,7 @@ script: Data.js
  
 description: Set/Read html5 data into/from elements.
  
-license: MIT-style license.
+license: Public domain (http://unlicense.org).
  
 requires:
 - Core/Element

@@ -3,7 +3,7 @@
  
 script: Data.js
  
-description: Set javascript controller into element
+description: Get/Set javascript controller into element
  
 license: MIT-style license.
  
@@ -16,9 +16,12 @@ provides: [Element.Properties.widget]
 */
 
 Element.Properties.widget = {
-	get: function(options) {
-		return this.set('widget', options);
-	},
+  get: function(){
+    var widget, element = this;
+    while (element && !(widget = element.retrieve('widget'))) element = element.getParent();
+    if (widget && (element != this)) this.store('widget', widget);
+    return widget;
+  },
 	
 	set: function(options) {
 		if (this.retrieve('widget')) {
@@ -27,9 +30,9 @@ Element.Properties.widget = {
 			var given = this.retrieve('widget:options') || {};
 			for (var i in options) {
 				if (given[i] && i.match('^on[A-Z]')) {
-					given[i] = (function(a,b) {
-						return function() {
-							a.apply(this, arguments);
+					given[i] = (function(a,b) {        // temp solution
+						return function() {              // wrap two functions in closure instead of overwrite
+							a.apply(this, arguments);      // TODO: some way of passing a raw array of callbacks
 							b.apply(this, arguments);
 						}
 					})(given[i], options[i])
@@ -43,3 +46,6 @@ Element.Properties.widget = {
 		}
 	}
 };
+
+
+

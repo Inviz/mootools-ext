@@ -1,7 +1,7 @@
 /*
 ---
  
-script: Element.Microdata.js
+script: Item.js
  
 description: Methods to get and set microdata closely to html5 spsec
  
