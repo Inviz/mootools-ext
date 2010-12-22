@@ -30,7 +30,7 @@ stone.say();
 stone.birth();
 stone.roll();
 
-seporator();
+separator();
 
 var BigLivingStone = new Class({
   Includes: [LivingStone, Options],
