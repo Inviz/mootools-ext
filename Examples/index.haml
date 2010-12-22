@@ -3,6 +3,9 @@
   %head
     %title Mootools ext examples
     = render :haml, :"Examples/_includes"
+    = js "http://shjs.sourceforge.net/sh_main.min.js"
+    = js "http://shjs.sourceforge.net/lang/sh_javascript.min.js"
+    %link{ :rel => "stylesheet", :type => "text/css", :href => "http://shjs.sourceforge.net/css/sh_matlab.css" }/
   %body
     %haeder
       Examples
@@ -13,7 +16,8 @@
     
     - if params[:file]
       %section.code
-        %pre
-          = File.open("Examples/#{params[:file]}", 'r') {|f| f.read }
+        %pre.sh_javascript
+          :preserve
+            #{File.open("Examples/#{params[:file]}", 'r') {|f| f.read }}
       %section#output
       

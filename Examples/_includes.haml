@@ -12,5 +12,6 @@
   :javascript
     window.addEvent('domready', function() {
       #{File.open("Examples/#{params[:file]}", 'r') {|f| f.read } }
+      sh_highlightDocument();
     });
   
