@@ -27,8 +27,8 @@ Event.Keys = {
 (function() {
 	
 	//borrowed from google closure
-	
-	Browser.Features.keydown = (Browser.Engine.trident || (Browser.Engine.webkit && Browser.Engine.version == 525) || Browser.safari5);
+	// TODO check with diferent browsers
+	Browser.Features.keydown = (Browser.ie || ((Browser.safari || Browser.chrome) && Browser.version == 525) || Browser.safari5);
 	
 	Event.KeyNames = {
 	  8: 'backspace',

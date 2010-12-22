@@ -1,0 +1,16 @@
+- def js(path); "<script type='text/javascript' src='#{path}' ></script>"; end
+
+= js 'http://fiddle.jshell.net/js/lib/mootools-core-1.3-full-nocompat-nc.js'
+= js 'http://fiddle.jshell.net/js/lib/mootools-1.3.0.1-more.js'
+
+- YAML.load_file('package.yml')["sources"].each do |file|
+  = js "/#{file}"
+    
+= js "/Examples/examples.js"
+
+- if params[:file]
+  :javascript
+    window.addEvent('domready', function() {
+      #{File.open("Examples/#{params[:file]}", 'r') {|f| f.read } }
+    });
+  

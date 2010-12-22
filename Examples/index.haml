@@ -1,0 +1,18 @@
+!!! 5
+%html
+  %head
+    %title Mootools ext examples
+    = render :haml, :"Examples/_includes"
+  %body
+    %haeder
+      Examples
+      %nav
+        - %w{Class.Includes}.each do |page|
+          %li
+            %a{:href => "/Examples/index.haml?file=#{page}.js"}>= page
+    
+    %section.code
+      %pre
+        = File.open("Examples/#{params[:file]}", 'r') {|f| f.read }
+    %section#output
+      
