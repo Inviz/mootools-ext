@@ -27,15 +27,15 @@ Macro.onion = function(callback) {
   return function() {
     if (!this.parent.apply(this, arguments)) return;
     return callback.apply(this, arguments) !== false;
-  } 
-}
+  };
+};
 
 Macro.getter = function(name, callback) {
   return function() {
     if (!this[name]) this[name] = callback.apply(this, arguments);
     return this[name];
-  } 
-}
+  };
+};
 
 Macro.defaults = function(callback) {
   return function() {
@@ -44,23 +44,23 @@ Macro.defaults = function(callback) {
     } else {
       return callback.apply(this, arguments);
     }
-  }
+  };
 };
 
 Macro.map = function(name) {
   return function(item) {
-    return item[name]
-  }
-}
+    return item[name];
+  };
+};
 
 Macro.proc = function(name, args) {
   return function(item) {
     return item[name].apply(item, args || arguments);
-  } 
-}
+  };
+};
 
 Macro.delegate = function(name, method) {
   return function() {
     if (this[name]) return this[name][method].apply(this[name], arguments);
-  }
-}
+  };
+};
