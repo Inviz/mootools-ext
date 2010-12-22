@@ -18,6 +18,10 @@ provides: [Class.Mutators.Includes, Class.include, Class.flatten]
 */
 
 (function() {
+  function defined (a) {
+    return a != undefined;
+  }
+  
   var getInstance = function(klass){
   	klass.$prototyping = true;
   	var proto = new klass;
@@ -32,7 +36,7 @@ provides: [Class.Mutators.Includes, Class.include, Class.flatten]
   }
   
   Class.flatten = function(items) {
-    return Array.from(items).filter($defined).map(function(item, i) {
+    return Array.from(items).filter(defined).map(function(item, i) {
       if (item.parent) {
         return [Class.flatten(item.parent), item]
       } else {
@@ -49,7 +53,7 @@ provides: [Class.Mutators.Includes, Class.include, Class.flatten]
         baked.parent = instance;
         baked.prototype = getInstance(instance);
       }
-      var proto = $extend({}, parent.prototype)
+      var proto = Object.append({}, parent.prototype)
       delete proto.$caller;
       delete proto.$constructor;
       delete proto.parent;

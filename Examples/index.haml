@@ -11,8 +11,9 @@
           %li
             %a{:href => "/Examples/index.haml?file=#{page}.js"}>= page
     
-    %section.code
-      %pre
-        = File.open("Examples/#{params[:file]}", 'r') {|f| f.read }
-    %section#output
+    - if params[:file]
+      %section.code
+        %pre
+          = File.open("Examples/#{params[:file]}", 'r') {|f| f.read }
+      %section#output
       
