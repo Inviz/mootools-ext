@@ -10,14 +10,13 @@
     %haeder
       Examples
       %nav
-        - %w{Class.Includes Class.Macros}.each do |page|
+        - %w{Class.Includes Class.States Class.Macros}.each do |page|
           %li
             %a{:href => "/Examples/index.haml?file=#{page}.js"}>= page
-    
+
     - if params[:file]
       %section.code
         %pre.sh_javascript
           :preserve
             #{File.open("Examples/#{params[:file]}", 'r') {|f| f.read }}
       %section#output
-      
