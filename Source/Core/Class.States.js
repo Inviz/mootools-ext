@@ -11,7 +11,7 @@ requires:
 - Core/Options
 - Core/Events
 - Core/Class
-- Core/Hash
+- Core/Class.Extras
 - Class.Mutators.Includes
 
 provides: 
