@@ -43,6 +43,7 @@ provides: [Class.Mutators.Includes, Class.include, Class.flatten]
   };
 
   Class.Mutators.Includes = function(items) {
+    items = Array.from(items);
     var instance = this.parent ? this.parent : items.shift();
     Class.flatten(items).each(function(parent){
       var baked = new Class;
