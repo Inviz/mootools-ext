@@ -16,11 +16,11 @@ provides: [Element.Properties.userSelect]
 */
 
 (function() {
-  if (Browser.Engine.webkit)
-    var property = Browser.Engine.version == 525 ? 'WebkitUserSelect' : 'KhtmlUserSelect';
-  else if (Browser.Engine.gecko)
+  if (Browser.chrome || Browser.safari)
+    var property = Browser.version == 525 ? 'WebkitUserSelect' : 'KhtmlUserSelect';
+  else if (Browser.firefox)
     var property = 'MozUserSelect'
-  else if (!Browser.Engine.trident)
+  else if (!Browser.ie)
     var property = 'UserSelect';
     
   Element.Properties.userSelect = {

@@ -17,9 +17,9 @@ provides: [Element.Properties.borderRadius]
 
 
 (function() {
-  if (Browser.Engine.webkit) 
+  if (Browser.safari || Browser.chrome) 
     var properties = ['webkitBorderTopLeftRadius', 'webkitBorderTopRightRadius', 'webkitBorderBottomRightRadius', 'webkitBorderBottomLeftRadius'];
-  else if (Browser.Engine.gecko)
+  else if (Browser.firefox)
     var properties = ['MozBorderRadiusTopleft', 'MozBorderRadiusTopright', 'MozBorderRadiusBottomright', 'MozBorderRadiusBottomleft']
   else
     var properties = ['borderRadiusTopLeft', 'borderRadiusTopRight', 'borderRadiusBottomRight', 'borderRadiusBottomLeft']

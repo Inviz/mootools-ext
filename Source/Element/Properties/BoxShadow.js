@@ -16,7 +16,7 @@ provides: [Element.Properties.boxShadow]
 */
 (function() {
   if (Browser.safari)            var property = 'webkitBoxShadow';
-  else if (Browser.Engine.gecko) var property = 'MozBoxShadow'
+  else if (Browser.firefox)      var property = 'MozBoxShadow'
   else                           var property = 'boxShadow';
   if (property) {
     var dummy = document.createElement('div');
