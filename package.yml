@@ -31,5 +31,8 @@ sources:
   - "Source/Core/Class.States.js"
   - "Source/Core/Class.Macros.js"
   - "Source/Core/Class.Binds.Remover.js"
+  - "Source/Core/Class.Speedups.js"
+  - "Source/Core/Class.Extras.Speedups.js"
+  - "Source/Core/Core.Speedups.js"
   - "Source/Drag/Drag.Limits.js"
   - "Source/Drag/Slider.js"
