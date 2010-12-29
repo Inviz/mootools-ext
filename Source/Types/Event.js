@@ -28,7 +28,7 @@ Event.Keys = {
 	
 	//borrowed from google closure
 	// TODO check with diferent browsers
-	Browser.Features.keydown = (Browser.ie || ((Browser.safari || Browser.chrome) && Browser.version == 525) || Browser.safari5);
+	Browser.Features.keydown = (Browser.ie || Browser.chrome || Browser.safari);
 	
 	Event.KeyNames = {
 	  8: 'backspace',
