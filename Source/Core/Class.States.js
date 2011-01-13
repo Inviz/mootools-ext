@@ -48,7 +48,6 @@ Class.Stateful = function(states) {
     proto[options.enabler] = function() {
       if (this[state]) return false;
       this[state] = true; 
-
       if (Class.hasParent(this)) this.parent.apply(this, arguments);
 
       this.fireEvent(options.enabler, arguments);
@@ -77,4 +76,7 @@ Class.Stateful = function(states) {
 
 Class.Mutators.States = function(states) {
   this.implement('Includes', Class.Stateful(states));
+};
+Class.Mutators.Stateful = function(states) {
+  this.implement('Implements', Class.Stateful(states));
 };

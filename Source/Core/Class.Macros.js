@@ -12,7 +12,7 @@ requires:
 - Core/Events
 - Core/Class.Extras
 
-provides: [Class.Mutators.States, Macro, Class.hasParent]
+provides: [Macro, Class.hasParent]
  
 ...
 */
