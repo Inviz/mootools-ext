@@ -33,3 +33,4 @@ sources:
   - "Source/Core/Class.Binds.Remover.js"
   - "Source/Drag/Drag.Limits.js"
   - "Source/Drag/Slider.js"
+  - "Source/Request/Request.Form.js"

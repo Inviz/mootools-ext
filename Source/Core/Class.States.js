@@ -49,7 +49,7 @@ Class.Stateful = function(states) {
       if (this[state]) return false;
       this[state] = true; 
       if (Class.hasParent(this)) this.parent.apply(this, arguments);
-
+      
       this.fireEvent(options.enabler, arguments);
       if (this.onStateChange && options.reflect) this.onStateChange(state, true, arguments);
       return true;
