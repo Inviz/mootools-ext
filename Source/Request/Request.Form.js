@@ -8,7 +8,7 @@ description: Create & submit forms.
 license: MIT-style license.
 
 requires: 
-  - Request
+  - Core/Request
 
 provides: 
   - Request.Form

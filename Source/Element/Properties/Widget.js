@@ -24,10 +24,11 @@ Element.Properties.widget = {
   },
 	
 	set: function(options) {
-		if (this.retrieve('widget')) {
-			return this.retrieve('widget').setOptions(options)
+	  var retrieved = Element.retrieve(this, 'widget');
+		if (retrieved) {
+			return retrieved.setOptions(options)
 		} else {
-			var given = this.retrieve('widget:options') || {};
+			var given = Element.retrieve(this, 'widget:options') || {};
 			for (var i in options) {
 				if (given[i] && i.match('^on[A-Z]')) {
 					given[i] = (function(a,b) {        // temp solution (that is 1.5 years in production :( )
@@ -42,7 +43,7 @@ Element.Properties.widget = {
 					$extend(given, o);
 				}
 			}
-			this.store('widget:options', given);
+			Element.retrieve(this, 'widget:options', given);
 		}
 	}
 };

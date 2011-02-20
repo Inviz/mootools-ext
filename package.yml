@@ -34,3 +34,6 @@ sources:
   - "Source/Drag/Drag.Limits.js"
   - "Source/Drag/Slider.js"
   - "Source/Request/Request.Form.js"
+  - "Source/Request/Request.Headers.js"
+  - "Source/Request/Request.Statuses.js"
+  - "Source/Request/Request.Auto.js"
