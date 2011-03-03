@@ -27,11 +27,13 @@ Request.Auto = new Class({
 	},
 	
 	success: function() {
-	  var type = this.getContentType().indexOf('json') > -1 ? 'JSON' : 'HTML';
-	  return Request[type].prototype.success.apply(this, arguments);
+	  var contentType = this.getContentType();
+	  if (!contentType) return false;
+	  var type = contentType.indexOf('json') > -1 ? 'JSON' : false;
+	  return (type ? Request[type] : Request).prototype.success.apply(this, arguments);
 	},
 	
 	getContentType: function() {
 	  return this.getHeader('Content-Type') ? this.getHeader('Content-Type').split(';')[0] : null;
 	}
-})
+});

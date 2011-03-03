@@ -9,6 +9,7 @@ license: MIT-style license.
 
 requires: 
   - Core/Request
+  - More/String.QueryString
 
 provides: 
   - Request.Form
@@ -56,36 +57,33 @@ provides:
       this.setOptions(options)
       return this
     },
+    
+    getData: function(data) {
+      return data;
+    },
   
     getForm: function(options, attrs) {
       options = $merge(this.options, options)
-      if (Environment.params.authenticity_token) {
-        if ($type(options.data) == "string") { 
-          options.data += "&authenticity_token=" + Environment.params.authenticity_token
-        } else {
-          options.data.authenticity_token = Environment.params.authenticity_token
-        }
-      }
-      var data = options.data;
+      var data = this.getData(options.data);
       if (options.method == "get") data = '?' + Hash.toQueryString(data);
       if ($type(data) == "string") {
         var fragments = options.url.split('#');
         var bits = fragments[0].split('?');
         var params = '?' + (bits[1] || '');
-        options.url = bits[0] + '?' + Hash.toQueryString($merge(params.fromQueryString(), data.fromQueryString()));
+        options.url = bits[0] + '?' + Object.toQueryString(params.parseQueryString(), data.parseQueryString());
         if (fragments[1]) options.url += "#" + fragments[1];
-        delete options.data
+        data = null
       }
       
       if (options.method != "get" && options.method != "post") {
-        options.data._method = options.method
+        data._method = options.method
         options.method = "post"
       }
       
       return (this.options.form || new Element('form', attrs).inject(document.body)).set({
         'method': options.method,
         'action': options.url,
-        'html'  : convert(options.data || {})
+        'html'  : convert(data || {})
       });
     },
 
@@ -93,11 +91,7 @@ provides:
       this.fireEvent('request', options);
       var form = this.getForm(options);
       var method = (options || {}).method || this.options.method;
-      if (method == "get") {
-        Orwik.redirect(form.get('action'))
-      } else {
-        form.submit();
-      }
+      form.submit();
     }
   })
 })();
