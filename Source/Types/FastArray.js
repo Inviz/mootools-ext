@@ -36,7 +36,8 @@ FastArray.prototype = {
   },
   
   concat: function(array) {
-    this.push.apply(this, array);
+    if ('length' in array) this.push.apply(this, array);
+    else for (var key in array) if (array.hasOwnProperty(key)) this[key] = true;
     return this;
   },
   
