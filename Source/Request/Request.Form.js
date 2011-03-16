@@ -26,9 +26,7 @@ provides:
     
     switch (typeOf(thing)) {
       case "object":
-        Hash.each(thing, function(value, key) {
-          html.push(convert(value, prefix ? (prefix + '[' + key + ']') : key));
-        });
+        for (var key in thing) html.push(convert(thing[key], prefix ? (prefix + '[' + key + ']') : key));
         break;
       case "array":
         for (var key = 0; key < thing.length; key++) html.push(convert(thing[key], prefix + '[]'));
@@ -65,7 +63,7 @@ provides:
     },
     
     getOptions: function(options) {
-      options = $merge(this.options, options)
+      options = Object.merge(this.options, options)
       var data = this.getData(options.data);
       if (data.indexOf) {
         var fragments = options.url.split('#');
