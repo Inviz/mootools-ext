@@ -22,8 +22,7 @@ document.createFragment = window.innerShiv = (function() {
 	var d, r;
 	
 	return function(h, u) {
-	  console.log(h, u, 123)
-		if (!d) {
+	  if (!d) {
 			d = document.createElement('div');
 			r = document.createDocumentFragment();
 			/*@cc_on d.style.display = 'none';@*/
