@@ -15,7 +15,7 @@ provides: [FastArray]
 ...
 */
 
-FastArray = function() {
+window.FastArray = function() {
   this.push.apply(this, arguments);
 }
 
@@ -24,6 +24,11 @@ FastArray.from = function(ary) {
   FastArray.prototype.push.apply(array, ary)
   return array;
 }
+FastArray.compact = function() {
+  var object = {};
+  for (var i = 0, arg; arg = arguments[i++];) object[arg] = true;
+  return object;
+};
 FastArray.prototype = {
   push: function() {
     Array.each(arguments, function(argument) {
