@@ -20,6 +20,7 @@ sources:
   - "Source/Element/Properties/Widget.js"
   - "Source/Element/Element.Selection.js"
   - "Source/Element/Element.from.js"
+  - "Source/Element/Element.onDispose.js"
   - "Source/Element/Properties/Item.js"
   - "Source/Element/Properties/Data.js"
   - "Source/Element/Properties/Widget.js"

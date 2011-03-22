@@ -29,14 +29,13 @@ provides:
         for (var key in thing) html.push(convert(thing[key], prefix ? (prefix + '[' + key + ']') : key));
         break;
       case "array":
-        for (var key = 0; key < thing.length; key++) html.push(convert(thing[key], prefix + '[]'));
+        for (var key = 0, length = thing.length; key < length; key++) html.push(convert(thing[key], prefix + '[]'));
         break;
       case "boolean":
         break;
       default:
         return ["<input type='hidden' name='", prefix, "' value='", thing.toString().replace(/\"/g, '\\"'), "'/>"].join("");
     }
-    
     return html.join("\n")
   }
 
@@ -64,22 +63,12 @@ provides:
     
     getOptions: function(options) {
       options = Object.merge(this.options, options)
-      var data = this.getData(options.data);
-      if (data.indexOf) {
-        var fragments = options.url.split('#');
-        var bits = fragments[0].split('?');
-        var params = '?' + (bits[1] || '');
-        options.url = bits[0] + '?' + Object.toQueryString(params.parseQueryString(), data.parseQueryString());
-        if (fragments[1]) options.url += "#" + fragments[1];
-        data = null
-      }
-
+      options.data = this.getData(options.data);
+      if (options.data && options.data.indexOf) options.data = options.data.parseQueryString();
       if (options.method != "get" && options.method != "post") {
         data._method = options.method
         options.method = "post"
       }
-      if (data) options.data = data;
-      else delete options.data;
       return options;
     },
   
@@ -94,9 +83,7 @@ provides:
     send: function(options) {
       options = this.getOptions(options);
       this.fireEvent('request', options);
-      if (options.method == 'get') {
-        location.href = options.url;
-      } else this.getForm(options).submit();
+      this.getForm(options).submit();
     }
   })
 })();
