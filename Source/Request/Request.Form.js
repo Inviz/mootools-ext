@@ -34,7 +34,7 @@ provides:
       case "boolean":
         break;
       default:
-        return ["<input type='hidden' name='", prefix, "' value='", thing.toString().replace(/\"/g, '\\"'), "'/>"].join("");
+        if (thing) return ["<input type='hidden' name='", prefix, "' value='", thing.toString().replace(/\"/g, '\\"'), "'/>"].join("");
     }
     return html.join("\n")
   }
@@ -62,7 +62,7 @@ provides:
     },
     
     getOptions: function(options) {
-      options = Object.merge(this.options, options)
+      options = Object.merge({}, this.options, options)
       options.data = this.getData(options.data);
       if (options.data && options.data.indexOf) options.data = options.data.parseQueryString();
       if (options.method != "get" && options.method != "post") {
@@ -82,8 +82,16 @@ provides:
 
     send: function(options) {
       options = this.getOptions(options);
+      if (options.method == 'get') {
+        var url = options.url
+        if (options.data) {
+          url = url.split("?");
+          if (url[1]) Object.append(options.data, url[1].parseQueryString());
+          url = url[0] + (Object.getLength(options.data) > 0 ? ("?" + Object.toQueryString(options.data)) : "");
+        }
+        location.href = url;
+      } else this.getForm(options).submit();
       this.fireEvent('request', options);
-      this.getForm(options).submit();
     }
   })
 })();
