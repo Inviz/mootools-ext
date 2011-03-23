@@ -16,10 +16,10 @@ provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdat
 */
 
 [Document, Element].invoke('implement', {
-  getItems: function(tokens) {
+  getItems: function(tokens, strict) {
     var selector = '[itemscope]:not([itemprop])';
     if (tokens) selector += tokens.split(' ').map(function(type) {
-      return '[itemtype~=' + type + ']'
+      return '[itemtype' + (strict ? '~' : '*') + '=' + type + ']'
     }).join('');
     return this.getElements(selector).each(function(element) {
       return element.get('item');
