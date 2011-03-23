@@ -3,7 +3,7 @@
 
 name: Request.Statuses
 
-description: Statuses fire events on request
+description: Statuses fire events on request. Also passes arguments to callChain
 
 license: MIT-style license.
 
@@ -83,7 +83,8 @@ Object.append(Request.prototype, {
   onSuccess: function() {
     var status = Request.Statuses[this.status];
     if (status) this.fireEvent('on' + status, arguments)
-    return (isSuccess.call(this) ? onSuccess : this.onFailure).apply(this, arguments);
+    if (isSuccess.call(this)) this.fireEvent('complete', arguments).fireEvent('success', arguments).callChain.apply(this, arguments);
+    else this.onFailure.apply(this, arguments);
   },
 
   onFailure: function(){
