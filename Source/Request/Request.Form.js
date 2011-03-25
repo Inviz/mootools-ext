@@ -41,7 +41,7 @@ provides:
 
   Request.Form = new Class({
   
-    Implements: [Options, Events],
+    Implements: [Options, Events, Chain],
   
     options: {
       url: null,
@@ -66,7 +66,8 @@ provides:
       options.data = this.getData(options.data);
       if (options.data && options.data.indexOf) options.data = options.data.parseQueryString();
       if (options.method != "get" && options.method != "post") {
-        data._method = options.method
+        if (!options.data) options.data = {};
+        options.data._method = options.method
         options.method = "post"
       }
       return options;
@@ -82,6 +83,7 @@ provides:
 
     send: function(options) {
       options = this.getOptions(options);
+      this.fireEvent('request', options);
       if (options.method == 'get') {
         var url = options.url
         if (options.data) {
@@ -91,7 +93,7 @@ provides:
         }
         location.href = url;
       } else this.getForm(options).submit();
-      this.fireEvent('request', options);
+      return this;
     }
   })
 })();
