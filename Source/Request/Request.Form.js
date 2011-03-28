@@ -84,6 +84,15 @@ provides:
     send: function(options) {
       options = this.getOptions(options);
       this.fireEvent('request', options);
+      if (!this.unloader) {
+        var self = this;
+        var onfocus = function() {
+          self.fireEvent('complete');
+          window.removeListener(Browser.ie ? 'focusout' : 'blur', onfocus)
+        }
+        onfocus.delay(10000, this)
+        window.addListener(Browser.ie ? 'focusout' : 'blur', onfocus)
+      }
       if (options.method == 'get') {
         var url = options.url
         if (options.data) {
