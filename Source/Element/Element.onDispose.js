@@ -18,6 +18,6 @@ extends: Core/Element
 		return (this.parentNode) ? this.parentNode.removeChild(this) : this;
   });
   Element.dispose = function(element) {
-    return Element.prototype.dispose.call(element)
+    return Element.prototype.dispose.call(element);
   }
-}(Element.prototype.dispose)
+}(Element.prototype.dispose);

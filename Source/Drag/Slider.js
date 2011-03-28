@@ -30,4 +30,4 @@ Slider.implement({
 		this.drag['setMin' + X](- this.options.offset)
 		this.drag['setMax' + X](this.full - this.options.offset)
   }
-})
+});

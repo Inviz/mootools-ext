@@ -72,7 +72,7 @@ Class.unmix = function(instance, klass) {
     proto.uninitialize.call(instance, instance);
     instance.parent = parent;
   }
-}
+};
 
 Class.implement('mixin', function(klass) {
   Class.mixin(this, klass)
