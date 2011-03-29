@@ -17,12 +17,12 @@ provides: [Element.disableSelection, Element.enableSelection]
 
 Element.implement({
   disableSelection: function() {
-    if (Browser.Engine.trident) {
+    if (Browser.ie) {
       if (!this.retrieve('events:selectstart')) this.store('events:selectstart', function() {
         return false
       });
       this.addEvent('selectstart', this.retrieve('events:selectstart'));
-    } else if (Browser.Engine.webkit){
+    } else if (Browser.safari || Browser.chrome{
       this.style.WebkitUserSelect = "none";
     } else {
       this.style.MozUserSelect = "none";
@@ -31,9 +31,9 @@ Element.implement({
   },
   
   enableSelection: function() {
-    if (Browser.Engine.trident) {
+    if (Browser.ie) {
       this.removeEvent('selectstart', this.retrieve('events:selectstart'));
-    } else if (Browser.Engine.webkit){
+    } else if (Browser.safari || Browser.chrome){
       this.style.WebkitUserSelect = "";
     } else {
       this.style.MozUserSelect = "";

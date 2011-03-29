@@ -269,7 +269,7 @@ Event.Keys = {
 		  }
 
 		  // Saves Ctrl or Alt + key for IE7, which won't fire keypress.
-		  if (Browser.Engine.trident &&
+		  if (Browser.ie &&
 		      !this.shift &&
 		      (held == Event.Codes.CTRL ||
 		       held == Event.Codes.ALT)) {
@@ -278,7 +278,7 @@ Event.Keys = {
 
 		  // When Ctrl+<somekey> is held in IE, it only fires a keypress once, but it
 		  // continues to fire keydown events as the event repeats.
-		  if (Browser.Engine.trient && this.control && held == this.code) {
+		  if (Browser.ie && this.control && held == this.code) {
 		    return false;
 		  }
 
@@ -286,7 +286,7 @@ Event.Keys = {
 		    case Event.Codes.ENTER:
 		      return true;
 		    case Event.Codes.ESC:
-		      return !Browser.Engine.webkit;
+		      return !(Browser.safari || Browser.chrome);
 		  }
 
 		  return this.isCharacterKey();
