@@ -41,35 +41,45 @@ provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdat
 Element.Properties.properties = {
   get: function() {
     var properties = {};
-    var property = this.getProperty('itemprop');
+    var property = Element.getProperty(this, 'itemprop'), scope;
     if (property) {
-      var value = this.get('itemvalue');
-      if (value) push(properties, property, value)
+      var scope = Element.getProperty(this, 'itemscope');
+      if (!scope) {
+        var value = Element.get(this, 'itemvalue');
+        if (value) push(properties, property, value);
+      }
+    }
+    for (var i = 0, child; child = this.childNodes[i++];) {
+      if (child.nodeType != 1) continue;
+      var values = Element.get(child, 'properties');
+      for (var prop in values) push(properties, prop, values[prop]);
     }
     
-    this.getChildren().each(function(child) {
-      var values = child.get('properties');
-      for (var property in values) push(properties, property, values[property]);
-    });
-    
-    var reference = this.getProperty('itemref');
+    var reference = Element.getProperty(this, 'itemref');
     if (reference) {
       var selector = reference.split(' ').map(function(id) { return '#' + id}).join(', ');
-      $$(selector).each(function(reference) {
-        var values = reference.get('properties');
-        for (var property in values) push(properties, property, values[property]);
-      })
+      var elements = Slick.search(document.body, selector);
+      for (var i = 0, reference; reference = elements[i++];) {
+        var values = Element.get(reference, 'properties');
+        for (var prop in values) push(properties, prop, values[prop]);
+      }
     }
     
+    if (scope) {
+      var props = {};
+      props[property] = properties;
+      return props;
+    }
     return properties;
   },
   
   set: function(value) {
-    this.getChildren().each(function(child) {
-      var property = child.getProperty('itemprop');
-      if (property) child.set('itemvalue', value[property]);
-      else child.set('properties', value)
-    });
+    for (var i = 0, child; child = this.childNodes[i++];) {
+      if (child.nodeType != 1) continue;
+      var property = Element.getProperty(child, 'itemprop');
+      if (property) Element.set(child, 'itemvalue', value[property]);
+      else Element.set(child, 'properties', value)
+    };
   }
 };
 
@@ -77,13 +87,13 @@ Element.Properties.properties = {
 
 Element.Properties.item = {
   get: function() {
-    if (!this.getProperty('itemscope')) return;
-    return this.get('properties');
+    if (!Element.getProperty(this, 'itemscope')) return;
+    return Element.get(this, 'properties');
   },
   
   set: function(value) {
-    if (!this.getProperty('itemscope')) return;
-    return this.set('properties', value);
+    if (!Element.getProperty(this, 'itemscope')) return;
+    return Element.set(this, 'properties', value);
   }
 };
 
@@ -100,8 +110,6 @@ Element.Properties.itemvalue = {
   get: function() {
     var property = this.getProperty('itemprop');
     if (!property) return;
-    var item = this.get('item');
-    if (item) return item;
     switch (this.get('tag')) {
       case 'meta':
         return this.get('content') || '';
