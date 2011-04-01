@@ -19,7 +19,7 @@ Element.Properties.widget = {
   get: function(){
     var widget, element = this;
     while (element && !(widget = element.retrieve('widget'))) element = element.getParent();
-    if (widget && (element != this)) this.store('widget', widget);
+    //if (widget && (element != this)) this.store('widget', widget);
     return widget;
   },
 	
