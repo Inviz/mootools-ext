@@ -58,18 +58,18 @@ provides:
     },
     
     getData: function(data) {
-      return data;
+      return (data && data.toQueryString) ? data.toQueryString().parseQueryString() : data;
     },
     
     getOptions: function(options) {
       options = Object.merge({}, this.options, options)
-      options.data = this.getData(options.data);
-      if (options.data && options.data.indexOf) options.data = options.data.parseQueryString();
+      var data = this.getData(options.data);
       if (options.method != "get" && options.method != "post") {
-        if (!options.data) options.data = {};
-        options.data._method = options.method
+        if (!data) data = {};
+        data._method = options.method
         options.method = "post"
       }
+      if (data) options.data = data;
       return options;
     },
   
