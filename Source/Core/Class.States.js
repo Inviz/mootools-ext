@@ -17,66 +17,81 @@ requires:
 provides: 
   - Class.Mutators.States
   - Class.Stateful
+  - States
  
 ...
 */
 
 
-Class.Stateful = function(states) {
-  var proto = {
-    options: {
-      states: {}
-    },
-    setStateTo: function(state, to) {
-      return this[this.options.states[state][to ? 'enabler' : 'disabler']]();
+var States = new Class({
+  addStates: function(states) {
+    for (var i = 0, j = arguments.length, arg; i < j; i++) {
+      arg = arguments[i];
+      if (arg.indexOf) this.addState(arg);
+      else for (name in arg) this.addState(name, arg[name]);
     }
-  };
+  },
+  
+  removeStates: function(states) {
+    for (var i = 0, j = arguments.length, arg; i < j; i++) {
+      arg = arguments[i];
+      if (arg.indexOf) this.removeState(arg);
+      else for (name in states) this.removeState(name, states[name]);
+    }
+  },
+  
+  addState: function(name, state) {
+    if (!state || state === true) state = States.get(name);
+    if (!this.$states) this.$states = {};
+    if (this.$states[name]) return;
+    this.$states[name] = state;
+    this[state.enabler] = (function(callback) { 
+      return function() {
+        return this.setStateTo(name, true, state, arguments, callback)
+      }
+    })(this[state.enabler]);
+    this[state.disabler] = (function(callback) { 
+      return function() {
+        return this.setStateTo(name, false, state, arguments, callback)
+      }
+    })(this[state.disabler])
+    if (state.toggler) this[state.toggler] = (function(callback) { 
+      return function() {
+        return this.setStateTo(name, !this[name], state, arguments, callback)
+      }
+    })(this[state.toggler])
+  },
 
-  Object.each(states, function(methods, state) {
-    var options = Array.link(methods, {
-      enabler: Type.isString,
-      disabler: Type.isString,
-      toggler: Type.isString,
-      reflect: function(value){ return value != null; }
-    });
-    
-    //enable reflection by default
-    if (options.reflect == null) options.reflect = true;
+  removeState: function(name, state) {
+    if (!state) state = States.get(state);
+    delete this.$states[name];
+  },
+  
+  linkState: function(object, from, to, state) {
+    var first = this.$states[from] || States.get(from);
+    var second = object.$states[to] || States.get(to);
+    var events = {};
+    events[first.enabler] = second.enabler;
+    events[first.disabler] = second.disabler;
+    this[state === false ? 'removeEvents' : 'addEvents'](object.bindEvents(events));
+    if (this[from]) object[second.enabler]();
+  },
+  
+  unlinkState: function(object, from, to) {
+    return this.linkState(object, from, to, false)
+  },
+  
+  setStateTo: function(name, value, state, args, callback) {
+    if (this[name] == value) return false;
+    if (!state || state === true) state = States.get(name);
+    this[name] = !!value;
+    if (callback) callback.apply(this, args);
+    this.fireEvent(state[value ? 'enabler' : 'disabler'], args);
+    if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, args);
+    return true;
+  }
+});
 
-    proto.options.states[state] = options;
-
-    proto[options.enabler] = function() {
-      if (this[state]) return false;
-      this[state] = true; 
-      if (Class.hasParent(this)) this.parent.apply(this, arguments);
-      
-      this.fireEvent(options.enabler, arguments);
-      if (this.onStateChange && options.reflect) this.onStateChange(state, true, arguments);
-      return true;
-    };
-
-    proto[options.disabler] = function() {
-      if (!this[state]) return false;
-      this[state] = false;
-
-  	  if (Class.hasParent(this)) this.parent.apply(this, arguments);
-
-      this.fireEvent(options.disabler, arguments);
-      if (this.onStateChange && options.reflect) this.onStateChange(state, false, arguments);
-      return true;
-    };
-
-    if (options.toggler) proto[options.toggler] = function() {
-      return this[this[state] ? options.disabler : options.enabler].apply(this, arguments);
-    };
-  });
-
-  return new Class(proto);
-};
-
-Class.Mutators.States = function(states) {
-  this.implement('Includes', Class.Stateful(states));
-};
-Class.Mutators.Stateful = function(states) {
-  this.implement('Implements', Class.Stateful(states));
-};
+States.get = function() {
+  return;
+}
