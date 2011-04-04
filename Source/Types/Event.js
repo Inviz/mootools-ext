@@ -260,7 +260,7 @@ Event.Keys = {
 		  }
 
 		  if (Browser.Platform.mac && this.alt) {
-		    return Event.Codes.isCharacterKey(this.code);
+		    return Event.isCharacterKey(this.code);
 		  }
 
 		  // Alt but not AltGr which is represented as Alt+Ctrl.
@@ -293,22 +293,23 @@ Event.Keys = {
 		},
 		
 		isCharacterKey: function(code) {
-		  if (this.code >= Event.Codes.ZERO &&
-		      this.code <= Event.Codes.NINE) {
+		  if (!code) code = this.code;
+		  if (code >= Event.Codes.ZERO &&
+		      code <= Event.Codes.NINE) {
 		    return true;
 		  }
 
-		  if (this.code >= Event.Codes.NUM_ZERO &&
-		      this.code <= Event.Codes.NUM_MULTIPLY) {
+		  if (code >= Event.Codes.NUM_ZERO &&
+		      code <= Event.Codes.NUM_MULTIPLY) {
 		    return true;
 		  }
 
-		  if (this.code >= Event.Codes.A &&
-		      this.code <= Event.Codes.Z) {
+		  if (code >= Event.Codes.A &&
+		      code <= Event.Codes.Z) {
 		    return true;
 		  }
 
-		  switch (this.code) {
+		  switch (code) {
 		    case Event.Codes.SPACE:
 		    case Event.Codes.QUESTION_MARK:
 		    case Event.Codes.NUM_PLUS:
