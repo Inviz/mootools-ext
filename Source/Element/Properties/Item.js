@@ -14,6 +14,44 @@ provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdat
  
 ...
 */
+if (!Element.Item) Element.Item = {};
+Element.Item = {
+  walk: function(element, callback, memo, prefix) {
+    var prop = element.getAttribute('itemprop');
+    var scope = !!element.getAttribute('itemscope');
+    if (prefix && prop) {
+      if (!memo) memo = [];
+      memo.push(prop);
+    }
+    for (var i = 0, children = element.childNodes, child; child = children[i++];) {
+      if (child.nodeType != 1) continue;
+      memo = Element.Item.walk.call(this, child, callback, memo, prefix);
+    }
+    var reference = element.getAttribute('itemref');
+    if (scope && reference) {
+      for (var i = 0, bits = reference.split(/\s*/), j = bits.length; i < j; i++) {
+        var node = document.getElementById(bits[i]);
+        if (node) Element.Item.walk.call(this, child, callback, memo, prefix);
+      }
+    }
+    if (prefix && prop) memo.pop();
+    return (prop) ? callback.call(this, element, prop, scope, memo) : memo;
+  },
+  
+  serialize: function(element) {
+    return Element.Item.walk(element, function(element, prop, scope, object) {
+      if (!object) object = {};
+      if (scope) {
+        var obj = {};
+        obj[prop] = object;
+        return obj;
+      } else {
+        object[prop] = Element.get(element, 'itemvalue');
+        return object;
+      }
+    })
+  }
+};
 
 [Document, Element].invoke('implement', {
   getItems: function(tokens, strict) {
@@ -132,7 +170,7 @@ Element.Properties.itemvalue = {
         return resolve(this.get('data'));
       case 'time':
         var datetime = this.get('datetime');
-        if (!(datetime === undefined)) return datetime;
+        if (!(datetime === undefined)) return Date.parse(datetime);
       default:
         return this.getProperty('itemvalue') || this.get('text');
     }        

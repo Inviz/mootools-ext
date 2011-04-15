@@ -28,7 +28,7 @@ var States = new Class({
     for (var i = 0, j = arguments.length, arg; i < j; i++) {
       arg = arguments[i];
       if (arg.indexOf) this.addState(arg);
-      else for (name in arg) this.addState(name, arg[name]);
+      else for (var name in arg) this.addState(name, arg[name]);
     }
   },
   
@@ -36,7 +36,7 @@ var States = new Class({
     for (var i = 0, j = arguments.length, arg; i < j; i++) {
       arg = arguments[i];
       if (arg.indexOf) this.removeState(arg);
-      else for (name in states) this.removeState(name, states[name]);
+      else for (var name in states) this.removeState(name, states[name]);
     }
   },
   
