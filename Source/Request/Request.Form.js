@@ -19,8 +19,6 @@ provides:
 
 
 (function() {
-  if (!window.Request) Request = {};
-  
   var convert = function(thing, prefix) {
     var html = [];
     
@@ -46,9 +44,10 @@ provides:
     options: {
       url: null,
       method: "get",
+      emulation: true,
       async: false,
-			form: null,
-			data: null
+      form: null,
+      data: null
     },
   
     initialize: function(options) {
@@ -64,7 +63,7 @@ provides:
     getOptions: function(options) {
       options = Object.merge({}, this.options, options)
       var data = this.getData(options.data);
-      if (options.method != "get" && options.method != "post") {
+      if (this.options.emulation && !['get', 'post'].contains(options.method)) {
         if (!data) data = {};
         data._method = options.method
         options.method = "post"
@@ -74,11 +73,12 @@ provides:
     },
   
     getForm: function(options, attrs) {
-      return (this.options.form || new Element('form', attrs).inject(document.body)).set({
-        'method': options.method,
-        'action': options.url,
-        'html'  : convert(options.data)
-      });
+      var form = document.createElement('form');
+      form.setAttribute('method', options.method);
+      form.setAttribute('action', options.url);
+      form.innerHTML = convert(options.data);
+      document.body.appendChild(form);
+      return form;
     },
 
     send: function(options) {
