@@ -172,8 +172,8 @@ Element.Properties.itemvalue = {
         var datetime = this.get('datetime');
         if (!(datetime === undefined)) return Date.parse(datetime);
       default:
-        return this.getProperty('itemvalue') || this.get('text');
-    }        
+        return this.getProperty('itemvalue') || this.get('text').trim();
+    }
   },
 
   set: function(value) {
