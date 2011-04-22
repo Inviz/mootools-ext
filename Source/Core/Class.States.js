@@ -36,7 +36,7 @@ var States = new Class({
     for (var i = 0, j = arguments.length, arg; i < j; i++) {
       arg = arguments[i];
       if (arg.indexOf) this.removeState(arg);
-      else for (var name in states) this.removeState(name, states[name]);
+      else for (var name in arg) this.removeState(name, arg[name]);
     }
   },
   
@@ -57,7 +57,7 @@ var States = new Class({
     })(this[state.disabler])
     if (state.toggler) this[state.toggler] = (function(callback) { 
       return function() {
-        return this.setStateTo(name, !this[name], state, arguments, callback)
+        return this.setStateTo(name, !this[state.property || name], state, arguments, callback)
       }
     })(this[state.toggler])
   },
@@ -74,7 +74,7 @@ var States = new Class({
     events[first.enabler] = second.enabler;
     events[first.disabler] = second.disabler;
     this[state === false ? 'removeEvents' : 'addEvents'](object.bindEvents(events));
-    if (this[from]) object[second.enabler]();
+    if (this[first.property || from]) object[second.enabler]();
   },
   
   unlinkState: function(object, from, to) {
@@ -82,9 +82,9 @@ var States = new Class({
   },
   
   setStateTo: function(name, value, state, args, callback) {
-    if (this[name] == value) return false;
     if (!state || state === true) state = States.get(name);
-    this[name] = !!value;
+    if (this[state.property || name] == value) return false;
+    this[state.property || name] = !!value;
     if (callback) callback.apply(this, args);
     this.fireEvent(state[value ? 'enabler' : 'disabler'], args);
     if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, args);
