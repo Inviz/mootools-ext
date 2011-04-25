@@ -94,4 +94,4 @@ var States = new Class({
 
 States.get = function() {
   return;
-}
+};
