@@ -60,6 +60,7 @@ var States = new Class({
         return this.setStateTo(name, !this[state.property || name], state, arguments, callback)
       }
     })(this[state.toggler])
+    if (state.initial || this[state.property || name]) this[state.enabler]();
   },
 
   removeState: function(name, state) {
