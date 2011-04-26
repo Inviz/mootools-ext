@@ -89,7 +89,7 @@ Object.append(Request.prototype, {
 
   onFailure: function(){
     this.fireEvent('complete', arguments).fireEvent('failure', arguments);
-  },
+  }
 });
   
 })(Request.prototype.isSuccess, Request.prototype.onSuccess);
