@@ -1,3 +1,26 @@
+/*
+---
+ 
+script: Class.Shortcuts.js
+ 
+description: A mixin that adds and fiews keyboard shortcuts as events on object.
+ 
+license: MIT-style license.
+ 
+requires:
+  - Core/Options
+  - Core/Events
+  - Core/Class
+  - Core/Class.Extras
+  - Core/Browser
+
+provides: 
+  - Shortcuts
+ 
+...
+*/
+
+
 !function() {
   var parsed = {};
   var modifiers = ['shift', 'control', 'alt', 'meta'];
@@ -45,15 +68,11 @@
   Shortcuts = new Class({
     
     addShortcuts: function(shortcuts, internal) {
-      Object.each(shortcuts, function(fn, shortcut) {
-        this.addShortcut(shortcut, fn, internal);
-      }, this)
+      for (var shortcut in shortcuts) this.addShortcut(shortcut, shortcuts[shortcut], internal);
     },
 
     removeShortcuts: function(shortcuts, internal) {
-      Object.each(shortcuts, function(fn, shortcut) {
-        this.removeShortcut(shortcut, fn, internal);
-      }, this)
+      for (var shortcut in shortcuts) this.removeShortcut(shortcut, shortcuts[shortcut], internal);
     },
     
     addShortcut: function(shortcut, fn, internal) {
@@ -68,9 +87,9 @@
       }, this)
     },
     
-    getKeyListener: Macro.defaults(function() {
+    getKeyListener: function() {
       return this.element;
-    }),
+    },
 
     enableShortcuts: function() {
       if (!this.shortcutter) {

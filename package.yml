@@ -30,6 +30,7 @@ sources:
   - "Source/Utilities/Observer.js"
   - "Source/Core/Class.Includes.js"
   - "Source/Core/Class.States.js"
+  - "Source/Core/Class.Shortcuts.js"
   - "Source/Core/Class.Macros.js"
   - "Source/Core/Class.Mixin.js"
   - "Source/Core/Class.Binds.Remover.js"
