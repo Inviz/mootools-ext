@@ -49,7 +49,6 @@ Class.mixin = function(instance, klass) {
       return result;
     }.extend({$mixes: [value], $origin: origin, $name: name});
   });
-  if (instance.setOptions && proto.options) instance.setOptions(proto.options) //undoeable now :(
   if (proto.initialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.initialize.call(instance, instance);
