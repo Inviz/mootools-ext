@@ -8,15 +8,12 @@ description: A mutator that adds some basic state definition capabilities.
 license: MIT-style license.
  
 requires:
-- Core/Options
-- Core/Events
-- Core/Class
-- Core/Class.Extras
-- Class.Mutators.Includes
+  - Core/Options
+  - Core/Events
+  - Core/Class
+  - Core/Class.Extras
 
 provides: 
-  - Class.Mutators.States
-  - Class.Stateful
   - States
  
 ...
@@ -86,9 +83,12 @@ var States = new Class({
     if (!state || state === true) state = States.get(name);
     if (this[state.property || name] == value) return false;
     this[state.property || name] = !!value;
-    if (callback) callback.apply(this, args);
-    this.fireEvent(state[value ? 'enabler' : 'disabler'], args);
-    if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, args);
+    if (callback) {
+      var result = callback.apply(this, args);
+      if (result === false) return false;
+    }
+    this.fireEvent(state[value ? 'enabler' : 'disabler'], result || args);
+    if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, result || args);
     return true;
   }
 });
