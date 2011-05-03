@@ -68,10 +68,9 @@ var States = new Class({
   linkState: function(object, from, to, state) {
     var first = this.$states[from] || States.get(from);
     var second = object.$states[to] || States.get(to);
-    var events = {};
-    events[first.enabler] = second.enabler;
-    events[first.disabler] = second.disabler;
-    this[state === false ? 'removeEvents' : 'addEvents'](object.bindEvents(events));
+    var events = (first.events || first), method = (state === false ? 'removeEvent' : 'addEvent');
+    this[method](events.enabler, second.enabler.indexOf ? object.bindEvent(second.enabler) : second.enabler);
+    this[method](events.disabler, second.disabler.indexOf ? object.bindEvent(second.disabler) : second.disabler);
     if (this[first.property || from]) object[second.enabler]();
   },
   
@@ -87,7 +86,7 @@ var States = new Class({
       var result = callback.apply(this, args);
       if (result === false) return false;
     }
-    this.fireEvent(state[value ? 'enabler' : 'disabler'], result || args);
+    this.fireEvent((state.events || state)[value ? 'enabler' : 'disabler'], result || args);
     if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, result || args);
     return true;
   }
