@@ -24,7 +24,7 @@ FastArray.from = function(ary) {
   FastArray.prototype.push.apply(array, ary)
   return array;
 }
-Array.fast = Array.fast = function() {
+Array.fast = function() {
   var object = {};
   for (var i = 0, arg; arg = arguments[i++];) object[arg] = true;
   return object;
