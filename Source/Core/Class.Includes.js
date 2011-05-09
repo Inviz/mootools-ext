@@ -46,21 +46,20 @@ provides: [Class.Mutators.Includes, Class.include, Class.flatten]
     items = Array.from(items);
     var instance = this.parent ? this.parent : items.shift();
     Class.flatten(items).each(function(parent){
-      var baked = new Class;
+      var baked = new Class, proto = parent.prototype;
       if (instance) {
         baked.parent = instance;
         baked.prototype = getInstance(instance);
       }
-      var proto = Object.append({}, parent.prototype);
-      delete proto.$caller;
-      delete proto.$constructor;
-      delete proto.parent;
-      delete proto.caller;
-      for (var i in proto) {
-        var fn = proto[i];
-        if (fn && fn.$owner && (fn.$owner != parent) && fn.$owner.parent) delete proto[i];
+      for (var name in proto) {
+        switch (name) {
+          case "$caller": case "$constructor": case "parent": case "caller":
+            continue;
+        }
+        var fn = proto[name];
+        if (fn && fn.$owner && (fn.$owner != parent) && fn.$owner.parent) continue;
+        baked.implement(name, fn);
       }
-      baked.implement(proto);
       instance = baked;
     }, this);
     this.parent = instance;
