@@ -42,21 +42,16 @@ var States = new Class({
     if (!this.$states) this.$states = {};
     if (this.$states[name]) return;
     this.$states[name] = state;
-    this[state.enabler] = (function(callback) { 
-      return function() {
-        return this.setStateTo(name, true, state, arguments, callback)
-      }
-    })(this[state.enabler]);
-    this[state.disabler] = (function(callback) { 
-      return function() {
-        return this.setStateTo(name, false, state, arguments, callback)
-      }
-    })(this[state.disabler])
-    if (state.toggler) this[state.toggler] = (function(callback) { 
-      return function() {
-        return this.setStateTo(name, !this[state.property || name], state, arguments, callback)
-      }
-    })(this[state.toggler])
+    var enabler = this[state.enabler], disabler = this[state.disabler], toggler = this[state.toggler];
+    this[state.enabler] = function() {
+      return this.setStateTo(name, true, state, arguments, enabler)
+    }
+    this[state.disabler] = function() {
+      return this.setStateTo(name, false, state, arguments, disabler)
+    }
+    this[state.toggler] = function() { 
+      return this.setStateTo(name, !this[state.property || name], state, arguments, toggler)
+    }
     if (state.initial || this[state.property || name]) this[state.enabler]();
   },
 
@@ -69,8 +64,11 @@ var States = new Class({
     var first = this.$states[from] || States.get(from);
     var second = object.$states[to] || States.get(to);
     var events = (first.events || first), method = (state === false ? 'removeEvent' : 'addEvent');
-    this[method](events.enabler, second.enabler.indexOf ? object.bindEvent(second.enabler) : second.enabler);
-    this[method](events.disabler, second.disabler.indexOf ? object.bindEvent(second.disabler) : second.disabler);
+    var enabler = second.enabler, disabler = second.disabler;
+    if (enabler.indexOf) enabler = (object.bindEvent ? object.bindEvent(enabler) : object[enabler].bind(object));
+    if (disabler.indexOf) disabler = (object.bindEvent ? object.bindEvent(disabler) : object[disabler].bind(object));
+    this[method](events.enabler, enabler);
+    this[method](events.disabler, disabler);
     if (this[first.property || from]) object[second.enabler]();
   },
   

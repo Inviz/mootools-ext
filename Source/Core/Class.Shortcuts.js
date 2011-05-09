@@ -67,24 +67,26 @@ provides:
   
   Shortcuts = new Class({
     
-    addShortcuts: function(shortcuts, internal) {
-      for (var shortcut in shortcuts) this.addShortcut(shortcut, shortcuts[shortcut], internal);
-    },
-
-    removeShortcuts: function(shortcuts, internal) {
-      for (var shortcut in shortcuts) this.removeShortcut(shortcut, shortcuts[shortcut], internal);
-    },
-    
-    addShortcut: function(shortcut, fn, internal) {
-      parse(shortcut).each(function(cut) {
-        this.addEvent(cut, fn, internal)
-      }, this)
+    addShortcut: function(shortcut, fn) {
+      var shortcuts = this.shortcuts;
+      if (!shortcuts) this.shortcuts = shortcuts = {}
+      var group = shortcuts[shortcut];
+      if (!group) shortcuts[shortcut] = group = []
+      group.push(fn);
+      if (this.shortcutting) 
+        for (var i = 0, parsed = parse(shortcut), event; event = parsed[i++];)
+          this.addEvent(event, fn)
     },
     
-    removeShortcut: function(shortcut, fn, internal) {
-      parse(shortcut).each(function(cut) {
-        this.removeEvent(cut, fn, internal)
-      }, this)
+    removeShortcut: function(shortcut, fn) {
+      var shortcuts = this.shortcuts;
+      if (!shortcuts) return;
+      var group = shortcuts[shortcut];
+      if (!group) return;
+      group.push(fn);
+      if (this.shortcutting) 
+        for (var i = 0, parsed = parse(shortcut), event; event = parsed[i++];)
+          this.removeEvent(event, fn)
     },
     
     getKeyListener: function() {
@@ -104,12 +106,18 @@ provides:
       if (this.shortcutting) return;
       this.shortcutting = true;
       this.getKeyListener().addEvent('keypress', this.shortcutter);
+      for (var name in this.shortcuts)
+        for (var i = 0, parsed = parse(name), group = this.shortcuts[name], event; event = parsed[i++];)
+          for (var j = 0, fn; fn = group[j++];) this.addEvent(event, fn);
     },
 
     disableShortcuts: function() {
       if (!this.shortcutting) return;
       this.shortcutting = false;
       this.getKeyListener().removeEvent('keypress', this.shortcutter);
+      for (var name in this.shortcuts)
+        for (var i = 0, parsed = parse(name), group = this.shortcuts[name], event; event = parsed[i++];)
+          for (var j = 0, fn; fn = group[j++];) this.removeEvent(event, fn);
     }
   });
   

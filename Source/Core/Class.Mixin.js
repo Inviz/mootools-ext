@@ -20,11 +20,12 @@ provides:
 
 Class.mixin = function(instance, klass) {
   var proto = klass.prototype;
-  Object.each(proto, function(value, name) {
-    if (typeof value !== 'function') return;
+  for (var name in proto) {
+    var value = proto[name];
+    if (typeof value !== 'function') continue;
     switch (name) {
       case "parent": case "initialize": case "uninitialize": case "$constructor":
-        return;
+        continue;
     }
     value = value.$origin;
     var origin = instance[name], parent, wrap
@@ -47,25 +48,32 @@ Class.mixin = function(instance, klass) {
       this.$caller = current; this.caller = caller;
       delete wrapper.$stack;
       return result;
-    }.extend({$mixes: [value], $origin: origin, $name: name});
-  });
-  if (proto.initialize) {
-    var parent = instance.parent; instance.parent = function(){};
-    proto.initialize.call(instance, instance);
-    instance.parent = parent;
+    }
+    wrapper.$mixes = [value];
+    wrapper.$origin = origin;
+    wrapper.$name = name;
   }
+  //if (proto.initialize) {
+  //  var parent = instance.parent; instance.parent = function(){};
+  //  proto.initialize.call(instance, instance);
+  //  instance.parent = parent;
+  //}
 };
 
 Class.unmix = function(instance, klass) {
   var proto = klass.prototype;
-  Object.each(proto, function(value, key) {
+  for (var name in proto) (function(value, name) {
     if (typeof value !== 'function') return;
-    var remixed = instance[key]
-    if (remixed && remixed.$mixes) {
-      if (remixed.$origin) instance[key] = remixed.$origin;
-      else delete instance[key];
+    switch (name) {
+      case "parent": case "initialize": case "uninitialize": case "$constructor":
+        return;
     }
-  })
+    var remixed = instance[name]
+    if (remixed && remixed.$mixes) {
+      if (remixed.$origin) instance[name] = remixed.$origin;
+      else delete instance[name];
+    }
+  })(proto[name], name);
   if (proto.uninitialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.uninitialize.call(instance, instance);
