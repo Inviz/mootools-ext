@@ -22,8 +22,8 @@ extends: Core/Element
     replaces: function(el) {
       el = document.id(el, true);
       var parent = el.parentNode;
-      if (el.fireEvent) el.fireEvent('dispose', parent);
   		parent.replaceChild(this, el);
+      if (el.fireEvent) el.fireEvent('dispose', parent);
   		return this;
     }
   });
