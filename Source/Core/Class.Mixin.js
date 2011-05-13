@@ -18,14 +18,13 @@ provides:
 ...
 */
 
-Class.mixin = function(instance, klass) {
+Class.mixin = function(instance, klass, light) {
   var proto = klass.prototype;
-  for (var name in proto) {
-    var value = proto[name];
-    if (typeof value !== 'function') continue;
+  Object.each(proto, function(value, name) {
+    if (typeof value !== 'function') return;
     switch (name) {
       case "parent": case "initialize": case "uninitialize": case "$constructor":
-        continue;
+        return;
     }
     value = value.$origin;
     var origin = instance[name], parent, wrap
@@ -34,7 +33,8 @@ Class.mixin = function(instance, klass) {
       parent = origin.$owner;
       wrap = origin;
       origin = origin.$origin;
-    }  
+    };
+    if (instance[name] && light) return;
     var wrapper = instance[name] = function() {
       var stack = wrapper.$stack;
       if (!stack) stack = wrapper.$stack = wrapper.$mixes.clone()
@@ -52,28 +52,28 @@ Class.mixin = function(instance, klass) {
     wrapper.$mixes = [value];
     wrapper.$origin = origin;
     wrapper.$name = name;
+  });
+  if (proto.initialize) {
+    var parent = instance.parent; instance.parent = function(){};
+    proto.initialize.call(instance, instance);
+    instance.parent = parent;
   }
-  //if (proto.initialize) {
-  //  var parent = instance.parent; instance.parent = function(){};
-  //  proto.initialize.call(instance, instance);
-  //  instance.parent = parent;
-  //}
 };
 
-Class.unmix = function(instance, klass) {
+Class.unmix = function(instance, klass, light) {
   var proto = klass.prototype;
-  for (var name in proto) (function(value, name) {
+  Object.each(proto, function(value, key) {
     if (typeof value !== 'function') return;
-    switch (name) {
-      case "parent": case "initialize": case "uninitialize": case "$constructor":
-        return;
-    }
-    var remixed = instance[name]
+    var remixed = instance[key]
     if (remixed && remixed.$mixes) {
-      if (remixed.$origin) instance[name] = remixed.$origin;
-      else delete instance[name];
+      if (light) return;
+      remixed.$mixes.erase(value.$origin);
+      if (!remixed.$mixes.length) {
+        if (remixed.$origin) instance[key] = remixed.$origin;
+        else delete instance[key];
+      }
     }
-  })(proto[name], name);
+  })
   if (proto.uninitialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.uninitialize.call(instance, instance);
