@@ -20,21 +20,21 @@ provides:
 
 Class.mixin = function(instance, klass, light) {
   var proto = klass.prototype;
-  Object.each(proto, function(value, name) {
+  for (var name in proto) !function(value) {
     if (typeof value !== 'function') return;
     switch (name) {
       case "parent": case "initialize": case "uninitialize": case "$constructor":
         return;
     }
     value = value.$origin;
-    var origin = instance[name], parent, wrap
+    var origin = instance[name], parent, wrap;
     if (origin) {
+      if (light) return;
       if (origin.$mixes) return origin.$mixes.push(value);
       parent = origin.$owner;
       wrap = origin;
       origin = origin.$origin;
     };
-    if (instance[name] && light) return;
     var wrapper = instance[name] = function() {
       var stack = wrapper.$stack;
       if (!stack) stack = wrapper.$stack = wrapper.$mixes.clone()
@@ -52,7 +52,7 @@ Class.mixin = function(instance, klass, light) {
     wrapper.$mixes = [value];
     wrapper.$origin = origin;
     wrapper.$name = name;
-  });
+  }(proto[name]);
   if (proto.initialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.initialize.call(instance, instance);
@@ -62,18 +62,18 @@ Class.mixin = function(instance, klass, light) {
 
 Class.unmix = function(instance, klass, light) {
   var proto = klass.prototype;
-  Object.each(proto, function(value, key) {
+  for (var name in proto) !function(value) {
     if (typeof value !== 'function') return;
-    var remixed = instance[key]
+    var remixed = instance[name]
     if (remixed && remixed.$mixes) {
       if (light) return;
       remixed.$mixes.erase(value.$origin);
       if (!remixed.$mixes.length) {
-        if (remixed.$origin) instance[key] = remixed.$origin;
-        else delete instance[key];
+        if (remixed.$origin) instance[name] = remixed.$origin;
+        else delete instance[name];
       }
     }
-  })
+  }(proto[name]);
   if (proto.uninitialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.uninitialize.call(instance, instance);
