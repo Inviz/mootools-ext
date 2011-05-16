@@ -16,6 +16,7 @@ sources:
   - "Source/Types/Event.js"
   - "Source/Types/FastArray.js"
   - "Source/Element/Events/Keypress.js"
+  - "Source/Element/Events/Input.js"
   - "Source/Element/Properties/Data.js"
   - "Source/Element/Properties/Widget.js"
   - "Source/Element/Element.Selection.js"
