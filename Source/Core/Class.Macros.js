@@ -19,7 +19,7 @@ provides: [Macro, Class.hasParent]
 
 Class.hasParent = function(klass) {
   var caller = klass.$caller;
-  return !!(caller.$owner.parent && caller.$owner.parent.prototype[caller.$name]);
+  return !!(caller && caller.$owner.parent && caller.$owner.parent.prototype[caller.$name]);
 };
 
 Macro = {};
