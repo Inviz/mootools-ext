@@ -17,7 +17,6 @@ provides:
 */
 
 Request.Auto = new Class({
-  
 	Extends: Request,
 	
 	options: {
