@@ -37,11 +37,10 @@ Class.mixin = function(instance, klass, light) {
     };
     var wrapper = instance[name] = function() {
       var stack = wrapper.$stack;
-      if (!stack) stack = wrapper.$stack = wrapper.$mixes.clone()
+      if (!stack) stack = wrapper.$stack = Array.prototype.slice.call(wrapper.$mixes, 0);
       var mix = stack.pop();
       wrapper.$owner = {parent: mix ? instance.$constructor : parent}
-      if (!mix) mix = origin;
-      if (!mix) return;
+      if (!mix && !(mix = origin)) return;
       var caller = this.caller, current = this.$caller;
       this.caller = current; this.$caller = wrapper;
       var result = (mix || origin).apply(this, arguments);
