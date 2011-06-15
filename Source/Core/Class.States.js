@@ -50,9 +50,9 @@ var States = new Class({
       return this.setStateTo(name, false, state, arguments, disabler)
     }
     this[state.toggler] = function() { 
-      return this.setStateTo(name, !this[state.property || name], state, arguments, toggler)
+      return this.setStateTo(name, !this[state && state.property || name], state, arguments, toggler)
     }
-    if (state.initial || this[state.property || name]) this[state.enabler]();
+    if (state.initial || this[state && state.property || name]) this[state.enabler]();
   },
 
   removeState: function(name, state) {
@@ -78,8 +78,8 @@ var States = new Class({
   
   setStateTo: function(name, value, state, args, callback) {
     if (!state || state === true) state = States.get(name);
-    if (this[state.property || name] == value) return false;
-    this[state.property || name] = !!value;
+    if (this[state && state.property || name] == value) return false;
+    this[state && state.property || name] = !!value;
     if (callback) {
       var result = callback.apply(this, args);
       if (result === false) return false;
