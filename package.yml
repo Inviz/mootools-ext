@@ -31,7 +31,6 @@ sources:
   - "Source/Element/Properties/BoxShadow.js"
   - "Source/Element/Properties/BorderRadius.js"
   - "Source/Element/Properties/UserSelect.js"
-  - "Source/Utilities/Observer.js"
   - "Source/Core/Class.Includes.js"
   - "Source/Core/Class.States.js"
   - "Source/Core/Class.Shortcuts.js"
