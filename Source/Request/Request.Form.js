@@ -62,7 +62,7 @@ provides:
     
     getOptions: function(options) {
       options = Object.merge({}, this.options, options)
-      var data = this.getData(options.data);
+      var data = this.getData(options.data, options);
       if (this.options.emulation && !['get', 'post'].contains(options.method)) {
         if (!data) data = {};
         data._method = options.method

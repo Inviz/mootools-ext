@@ -22,7 +22,7 @@ Element.implement({
         return false
       });
       this.addEvent('selectstart', this.retrieve('events:selectstart'));
-    } else if (Browser.safari || Browser.chrome{
+    } else if (Browser.safari || Browser.chrome) {
       this.style.WebkitUserSelect = "none";
     } else {
       this.style.MozUserSelect = "none";

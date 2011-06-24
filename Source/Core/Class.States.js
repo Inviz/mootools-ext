@@ -56,7 +56,7 @@ var States = new Class({
   },
 
   removeState: function(name, state) {
-    if (!state) state = States.get(state);
+    if (!state) state = States.get(name);
     delete this.$states[name];
   },
   
