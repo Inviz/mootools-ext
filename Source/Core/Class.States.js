@@ -69,7 +69,7 @@ var States = new Class({
     if (disabler.indexOf) disabler = (object.bindEvent ? object.bindEvent(disabler) : object[disabler].bind(object));
     this[method](events.enabler, enabler);
     this[method](events.disabler, disabler);
-    if (this[first.property || from]) object[second.enabler]();
+    if (object[second.enabler] && this[first.property || from]) object[second.enabler]();
   },
   
   unlinkState: function(object, from, to) {
