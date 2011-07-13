@@ -30,7 +30,7 @@ provides:
   is "non successful" (anything but 2xx).
   
 */
-(function(isSuccess, onSuccess) {
+(function(onSuccess) {
 
 var Statuses = Request.Statuses = {
   200: 'Ok',
@@ -75,16 +75,18 @@ var Statuses = Request.Statuses = {
   510: "NotExtended"
 };
     
-Object.append(Request.prototype, {
-  isSuccess: function() {
-    return true;
+Object.merge(Request.prototype, {  
+  options: {
+    isSuccess: function() {
+      return true;
+    }
   },
   
   onSuccess: function() {
+    if (this.isSuccess()) this.fireEvent('complete', arguments).fireEvent('success', arguments).callChain.apply(this, arguments);
+    else this.onFailure.apply(this, arguments);
     var status = Request.Statuses[this.status];
     if (status) this.fireEvent('on' + status, arguments)
-    if (isSuccess.call(this)) this.fireEvent('complete', arguments).fireEvent('success', arguments).callChain.apply(this, arguments);
-    else this.onFailure.apply(this, arguments);
   },
 
   onFailure: function(){
@@ -92,4 +94,4 @@ Object.append(Request.prototype, {
   }
 });
   
-})(Request.prototype.isSuccess, Request.prototype.onSuccess);
+})(Request.prototype.onSuccess);

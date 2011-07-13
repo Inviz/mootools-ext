@@ -10,11 +10,10 @@ license: MIT-style license.
 requires:
 - Core/Element
  
-provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdata]
+provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdata, Element.Item]
  
 ...
 */
-if (!Element.Item) Element.Item = {};
 Element.Item = {
   walk: function(element, callback, memo, prefix) {
     var prop = element.getAttribute('itemprop');

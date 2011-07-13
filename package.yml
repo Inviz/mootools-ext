@@ -16,7 +16,7 @@ sources:
   - "Source/Types/Event.js"
   - "Source/Types/String.js"
   - "Source/Types/Object.js"
-  - "Source/Types/FastArray.js"
+  - "Source/Types/Object.Array.js"
   - "Source/Element/Element.js"
   - "Source/Element/Events/Keypress.js"
   - "Source/Element/Events/Input.js"

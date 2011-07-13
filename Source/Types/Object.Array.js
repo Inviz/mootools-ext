@@ -1,7 +1,7 @@
 /*
 ---
  
-script: FastArray.js
+script: Object.Array.js
  
 description: Array with fast lookup (based on object)
  
@@ -10,30 +10,24 @@ license: MIT-style license.
 requires:
 - Core/Class
  
-provides: [FastArray]
+provides: [Object.Array]
  
 ...
 */
 
-window.FastArray = function() {
+Object.Array = function() {
   this.push.apply(this, arguments);
 }
 
-FastArray.from = function(ary) {
-  var array = new FastArray;
-  FastArray.prototype.push.apply(array, ary)
-  return array;
-}
-Array.fast = function() {
+Array.fast = Array.object = function() {
   var object = {};
   for (var i = 0, arg; arg = arguments[i++];) object[arg] = true;
   return object;
 };
-FastArray.prototype = {
+Object.Array.prototype = {
   push: function() {
-    Array.each(arguments, function(argument) {
-      this[argument] = true;
-    }, this);
+    for (var i = 0, j = arguments.length; i < j; i++)
+      this[arguments[i]] = true;
   },
 
   contains: function(argument) {
@@ -52,7 +46,7 @@ FastArray.prototype = {
     }
   },
 
-  include: function(value) {
+  include: function(value, value) {
     this[value] = true;
   },
 
