@@ -45,16 +45,16 @@ var States = new Class({
     var prop = state && state.property || name;
     var enabler = this[state.enabler], disabler = this[state.disabler], toggler = this[state.toggler];
     this[state.enabler] = function() {
-      return this.setStateTo(name, true, state, arguments, enabler)
+      return this.setStateTo(name, true, arguments, enabler, state)
     }
     if (enabler) this[state.enabler].$original = enabler;
     this[state.disabler] = function() {
-      return this.setStateTo(name, false, state, arguments, disabler)
+      return this.setStateTo(name, false, arguments, disabler, state)
     }
     if (disabler) this[state.disabler].$original = disabler;
     if (state.toggler) {
       this[state.toggler] = function() { 
-        return this.setStateTo(name, !this[prop], state, arguments, toggler)
+        return this.setStateTo(name, !this[prop], arguments, toggler, state)
       }
       if (toggler) this[state.toggler].$original = toggler;
     }
@@ -63,7 +63,7 @@ var States = new Class({
   },
 
   removeState: function(name, state) {
-    if (!state) state = States.get(name);
+    if (!state || state === true) state = States.get(name);
     var method = this[state.enabler];
     if (method.$original) this[state.enabler] = method.$original
     else delete this[state.enabler];
@@ -74,7 +74,9 @@ var States = new Class({
       if (method.$original) this[state.toggler] = method.$original
       else delete this[state.toggler];
     }
+    var prop = state && state.property || name;
     if (this.fireEvent) this.fireEvent('stateRemoved', [name, state, prop])
+    if (this[prop]) delete this[prop];
     delete this.$states[name];
   },
   
@@ -94,7 +96,7 @@ var States = new Class({
     return this.linkState(object, from, to, false)
   },
   
-  setStateTo: function(name, value, state, args, callback) {
+  setStateTo: function(name, value, args, callback, state) {
     if (!state || state === true) state = States.get(name);
     if (this[state && state.property || name] == value) return false;
     this[state && state.property || name] = !!value;
