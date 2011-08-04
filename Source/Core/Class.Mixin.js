@@ -20,48 +20,51 @@ provides:
 
 Class.mixin = function(instance, klass, light) {
   var proto = klass.prototype;
-  for (var name in proto) !function(value) {
-    if (typeof value !== 'function') return;
+  mixing: for (var name in proto) {
     switch (name) {
-      case "parent": case "initialize": case "uninitialize": case "$constructor":
-        return;
+      case "parent": case "initialize": case "onMix":  case "onUnmix": case "$constructor":
+        continue mixing;
     }
-    value = value.$origin;
-    var origin = instance[name], parent, wrap;
-    if (origin) {
-      if (light) return;
-      if (origin.$mixes) return origin.$mixes.push(value);
-      parent = origin.$owner;
-      wrap = origin;
-      origin = origin.$origin;
-    };
-    var wrapper = instance[name] = function() {
-      var stack = wrapper.$stack;
-      if (!stack) stack = wrapper.$stack = Array.prototype.slice.call(wrapper.$mixes, 0);
-      var mix = stack.pop();
-      wrapper.$owner = {parent: mix ? instance.$constructor : parent}
-      if (!mix && !(mix = origin)) return;
-      var caller = this.caller, current = this.$caller;
-      this.caller = current; this.$caller = wrapper;
-      var result = (mix || origin).apply(this, arguments);
-      this.$caller = current; this.caller = caller;
-      delete wrapper.$stack;
-      return result;
-    }
-    wrapper.$mixes = [value];
-    wrapper.$origin = origin;
-    wrapper.$name = name;
-  }(proto[name]);
-  if (proto.initialize) {
-    var parent = instance.parent; instance.parent = function(){};
-    proto.initialize.call(instance, instance);
-    instance.parent = parent;
+    !function(value) {
+      if (typeof value !== 'function') return;
+      value = value.$origin;
+      var origin = instance[name], parent, wrap;
+      if (origin) {
+        if (light) return;
+        if (origin.$mixes) return origin.$mixes.push(value);
+        parent = origin.$owner;
+        wrap = origin;
+        origin = origin.$origin;
+      };
+      var wrapper = instance[name] = function() {
+        var stack = wrapper.$stack;
+        if (!stack) stack = wrapper.$stack = Array.prototype.slice.call(wrapper.$mixes, 0);
+        var mix = stack.pop();
+        wrapper.$owner = {parent: mix ? instance.$constructor : parent}
+        if (!mix && !(mix = origin)) return;
+        var caller = this.caller, current = this.$caller;
+        this.caller = current; this.$caller = wrapper;
+        var result = (mix || origin).apply(this, arguments);
+        this.$caller = current; this.caller = caller;
+        delete wrapper.$stack;
+        return result;
+      }
+      wrapper.$mixes = [value];
+      wrapper.$origin = origin;
+      wrapper.$name = name;
+    }(proto[name]);
   }
+  if (proto.onMix) return proto.onMix.call(instance);
 };
 
 Class.unmix = function(instance, klass, light) {
   var proto = klass.prototype;
-  for (var name in proto) !function(value) {
+  unmixing: for (var name in proto) {
+    switch (name) {
+      case "parent": case "initialize": case "onMix":  case "onUnmix": case "$constructor":
+        continue unmixing;
+    }
+    var value = proto[name];
     if (typeof value !== 'function') return;
     var remixed = instance[name]
     if (remixed && remixed.$mixes) {
@@ -72,12 +75,13 @@ Class.unmix = function(instance, klass, light) {
         else delete instance[name];
       }
     }
-  }(proto[name]);
+  }
   if (proto.uninitialize) {
     var parent = instance.parent; instance.parent = function(){};
     proto.uninitialize.call(instance, instance);
     instance.parent = parent;
   }
+  if (proto.onUnmix) return proto.onUnmix.call(instance);
 };
 
 Class.implement('mixin', function(klass) {
