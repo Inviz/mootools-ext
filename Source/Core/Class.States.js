@@ -43,20 +43,19 @@ var States = new Class({
     if (this.$states[name]) return;
     this.$states[name] = state;
     var prop = state && state.property || name;
-    var enabler = this[state.enabler], disabler = this[state.disabler], toggler = this[state.toggler];
+    var enabler = this[state.enabler], disabler = this[state.disabler]
     this[state.enabler] = function() {
       return this.setStateTo(name, true, arguments, enabler, state)
     }
-    if (enabler) this[state.enabler].$original = enabler;
+    if (enabler) this[state.enabler].$overloaded = enabler;
     this[state.disabler] = function() {
       return this.setStateTo(name, false, arguments, disabler, state)
     }
-    if (disabler) this[state.disabler].$original = disabler;
+    if (disabler) this[state.disabler].$overloaded = disabler;
     if (state.toggler) {
       this[state.toggler] = function() { 
-        return this.setStateTo(name, !this[prop], arguments, toggler, state)
+        return this.setStateTo(name, !this[prop], arguments, this[prop] ? disabler : enabler, state)
       }
-      if (toggler) this[state.toggler].$original = toggler;
     }
     if (state.initial || this[prop]) this[state.enabler]();
     if (this.fireEvent) this.fireEvent('stateAdded', [name, state, prop])
@@ -65,31 +64,15 @@ var States = new Class({
   removeState: function(name, state) {
     if (!state || state === true) state = States.get(name);
     var method = this[state.enabler];
-    if (method.$original) this[state.enabler] = method.$original
+    if (method.$overloaded) this[state.enabler] = method.$overloaded
     else delete this[state.enabler];
     method = this[state.disabler];
-    if (method.$original) this[state.disabler] = method.$original
+    if (method.$overloaded) this[state.disabler] = method.$overloaded
     else delete this[state.disabler];
-    if ((method = this[state.toggler])) {
-      if (method.$original) this[state.toggler] = method.$original
-      else delete this[state.toggler];
-    }
     var prop = state && state.property || name;
     if (this.fireEvent) this.fireEvent('stateRemoved', [name, state, prop])
     if (this[prop]) delete this[prop];
     delete this.$states[name];
-  },
-  
-  linkState: function(object, from, to, state) {
-    var first = this.$states[from] || States.get(from);
-    var second = object.$states[to] || States.get(to);
-    var events = (first.events || first), method = (state === false ? 'removeEvent' : 'addEvent');
-    var enabler = second.enabler, disabler = second.disabler;
-    if (enabler.indexOf) enabler = (object.bindEvent ? object.bindEvent(enabler) : object[enabler].bind(object));
-    if (disabler.indexOf) disabler = (object.bindEvent ? object.bindEvent(disabler) : object[disabler].bind(object));
-    this[method](events.enabler, enabler);
-    this[method](events.disabler, disabler);
-    if (object[second.enabler] && this[first.property || from]) object[second.enabler]();
   },
   
   unlinkState: function(object, from, to) {
@@ -105,11 +88,12 @@ var States = new Class({
       if (result === false) return false;
     }
     this.fireEvent((state.events || state)[value ? 'enabler' : 'disabler'], result || args);
-    if (this.onStateChange && (state.reflect !== false)) this.onStateChange(name, value, result || args);
+    if (this.onStateChange && (state.reflect !== false)) 
+      this.onStateChange(name, value, result || args, callback);
     return true;
   }
 });
 
 States.get = function() {
-  return;
+  return this.$states[name];
 };
