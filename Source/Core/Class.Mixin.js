@@ -68,8 +68,9 @@ Class.unmix = function(instance, klass, light) {
     if (typeof value !== 'function') return;
     var remixed = instance[name]
     if (remixed && remixed.$mixes) {
-      if (light) return;
-      remixed.$mixes.erase(value.$origin);
+      var index = remixed.$mixes.indexOf(value.$origin);
+      if (index == -1) return;
+      remixed.$mixes.splice(index, 1);
       if (!remixed.$mixes.length) {
         if (remixed.$origin) instance[name] = remixed.$origin;
         else delete instance[name];
