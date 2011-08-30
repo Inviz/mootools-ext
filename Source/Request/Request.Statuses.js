@@ -16,7 +16,7 @@ requires:
 extends: Core/Request
 
 provides: 
-  - Request.Headers
+  - Request.Statuses
 
 ...
 */
@@ -63,6 +63,7 @@ var Statuses = Request.Statuses = {
   415: "UnsupportedMediaType",
   416: "RequestRangeNotSatisfiable",
   417: "ExpectationFailed",
+  422: "UnacceptableEntity",
 
   500: "InternalServerError",
   501: "NotImplemented",
