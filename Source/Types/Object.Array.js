@@ -46,7 +46,7 @@ Object.Array.prototype = {
     }
   },
 
-  include: function(value, value) {
+  include: function(value) {
     this[value] = true;
   },
 
