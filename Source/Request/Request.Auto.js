@@ -26,8 +26,7 @@ Request.Auto = new Class({
 	},
 	
 	success: function() {
-	  var contentType = this.getContentType();
-	  if (!contentType) return false;
+	  var contentType = this.getContentType() || '';
 	  var type = contentType.indexOf('json') > -1 ? 'JSON' : false;
 	  return (type ? Request[type] : Request).prototype.success.apply(this, arguments);
 	},
