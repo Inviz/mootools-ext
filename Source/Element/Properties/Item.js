@@ -179,7 +179,7 @@ Element.Properties.itemvalue = {
     var property = this.getProperty('itemprop');
     var scope = this.getProperty('itemscope');
     if (property === undefined) return;
-    else if (scope && Object.type(value[scope])) return this.set('item', value[scope]);
+    else if (scope != null && Object.type(value[property])) return this.set('item', value[property]);
     
     switch (this.get('tag')) {
       case 'meta':
