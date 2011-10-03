@@ -1,17 +1,17 @@
 /*
 ---
- 
+
 script: Item.js
- 
+
 description: Methods to get and set microdata closely to html5 spsec
- 
+
 license: MIT-style license.
- 
+
 requires:
 - Core/Element
- 
+
 provides: [Element.prototype.getItems, Element.Properties.item, Element.Microdata, Element.Item]
- 
+
 ...
 */
 Element.Item = {
@@ -36,7 +36,7 @@ Element.Item = {
     if (prefix && prop) memo.pop();
     return (prop) ? callback.call(this, element, prop, scope, memo) : memo;
   },
-  
+
   serialize: function(element) {
     return Element.Item.walk(element, function(element, prop, scope, object) {
       if (!object) object = {};
@@ -91,7 +91,7 @@ Element.Properties.properties = {
       var values = Element.get(child, 'properties');
       for (var prop in values) push(properties, prop, values[prop]);
     }
-    
+
     var reference = Element.getProperty(this, 'itemref');
     if (reference) {
       var selector = reference.split(' ').map(function(id) { return '#' + id}).join(', ');
@@ -101,7 +101,7 @@ Element.Properties.properties = {
         for (var prop in values) push(properties, prop, values[prop]);
       }
     }
-    
+
     if (scope) {
       var props = {};
       props[property] = properties;
@@ -109,7 +109,7 @@ Element.Properties.properties = {
     }
     return properties;
   },
-  
+
   set: function(value) {
     for (var i = 0, child; child = this.childNodes[i++];) {
       if (child.nodeType != 1) continue;
@@ -127,7 +127,7 @@ Element.Properties.item = {
     if (!Element.getProperty(this, 'itemscope')) return;
     return Element.get(this, 'properties');
   },
-  
+
   set: function(value) {
     if (!Element.getProperty(this, 'itemscope')) return;
     return Element.set(this, 'properties', value);
@@ -138,9 +138,7 @@ Element.Properties.item = {
 
 var resolve = function(url) {
   if (!url) return '';
-  var img = document.createElement('img');
-  img.setAttribute('src', url);
-  return img.src;
+  return url;
 }
 
 Element.Properties.itemvalue = {
@@ -180,7 +178,7 @@ Element.Properties.itemvalue = {
     var scope = this.getProperty('itemscope');
     if (property === undefined) return;
     else if (scope != null && Object.type(value[property])) return this.set('item', value[property]);
-    
+
     switch (this.get('tag')) {
       case 'meta':
         return this.set('content', value);
