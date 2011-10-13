@@ -15,6 +15,7 @@ extends: Core/Object
 Object.extend({
 	toQueryString: function(object, base, index){
 		if (typeof object == 'object') {
+		  if (object == null) return '';
   		var queryString = [];
 		  if (object.push) {
 				var complex = false;
