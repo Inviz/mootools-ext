@@ -98,7 +98,7 @@ provides:
         if (options.data) {
           url = url.split("?");
           if (url[1]) Object.append(options.data, url[1].parseQueryString());
-          url = url[0] + (Object.getLength(options.data) > 0 ? ("?" + Object.toQueryString(options.data)) : "");
+          url = url[0] + (url.length > 1 || Object.getLength(options.data) > 0 ? ("?" + Object.toQueryString(options.data)) : "");
         }
         location.href = url;
       } else this.getForm(options).submit();
