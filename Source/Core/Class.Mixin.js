@@ -40,7 +40,7 @@ Class.mixOne = function(instance, name, value) {
   };
   var wrapper = instance[name] = function() {
     var stack = wrapper.$stack;
-    if (!stack) stack = wrapper.$stack = Array.prototype.slice.call(wrapper.$mixes, 0);
+    if (!stack || !stack.length) stack = wrapper.$stack = Array.prototype.slice.call(wrapper.$mixes, 0);
     var mix = stack.pop();
     wrapper.$owner = {parent: mix ? instance.$constructor : parent}
     if (!mix && !(mix = origin)) return;
